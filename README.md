@@ -29,7 +29,7 @@ This project demonstrates how to build a simple yet powerful **agent-based chatb
 
 ## 🖼️ Screenshot
 
-![Chatbot Flow Screenshot](ui.png)
+![Chatbot Flow Screenshot](Aget_based_chatbot.png)
 
 > A high-level view of the LangGraph-based chatbot workflow.
 
