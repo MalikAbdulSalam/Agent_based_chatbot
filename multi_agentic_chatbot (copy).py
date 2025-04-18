@@ -17,10 +17,10 @@ from langchain_groq import ChatGroq
 from IPython.display import Image, display
 from PyQt5.QtGui import QKeyEvent
 # ------------------ Tool Setup ------------------
-arxiv_wrapper = ArxivAPIWrapper(top_k_results=1, doc_content_chars_max=1000)
+arxiv_wrapper = ArxivAPIWrapper(top_k_results=1, doc_content_chars_max=300)
 arxiv_tool = ArxivQueryRun(api_wrapper=arxiv_wrapper)
 
-wiki_wrapper = WikipediaAPIWrapper(top_k_results=1, doc_content_chars_max=1000)
+wiki_wrapper = WikipediaAPIWrapper(top_k_results=1, doc_content_chars_max=300)
 wiki_tool = WikipediaQueryRun(api_wrapper=wiki_wrapper)
 
 tools = [wiki_tool, arxiv_tool]
@@ -30,7 +30,7 @@ class State(TypedDict):
     messages: Annotated[list, add_messages]
 
 # ------------------ LLM Setup ------------------
-groq_api_key = "your Groq API key"
+groq_api_key = "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"
 llm = ChatGroq(groq_api_key=groq_api_key, model_name="Gemma2-9b-It")
 llm_with_tools = llm.bind_tools(tools=tools)
 
@@ -65,11 +65,13 @@ def run_chatbot(user_input: str) -> str:
         "tool_used": None,
         "tool_input": None,
         "tool_output": None,
-        "ai_response": None,
+        "ai_response": None,  # <-- NEW
     }
 
     events = graph.stream({"messages": memory}, stream_mode="values")
 
+    pending_tool_name = None
+    pending_tool_args = None
     final_ai_response = None
 
     for event in events:
@@ -78,29 +80,24 @@ def run_chatbot(user_input: str) -> str:
 
         if latest.type == "ai":
             final_ai_response = latest.content
-            # ✅ Detect tool call inside AI message
-            if hasattr(latest, "tool_calls") and latest.tool_calls:
-                first_tool = latest.tool_calls[0]
-                tool_info["tool_used"] = first_tool["name"]
-                tool_info["tool_input"] = first_tool["args"]
+
+            if getattr(latest, "tool_call", None):
+                pending_tool_name = latest.tool_call["name"]
+                pending_tool_args = latest.tool_call["args"]
 
         elif latest.type == "tool":
+            tool_info["tool_used"] = pending_tool_name
+            tool_info["tool_input"] = pending_tool_args
             tool_info["tool_output"] = latest.content
+            pending_tool_name = None
+            pending_tool_args = None
 
         memory.append(("ai", latest.content))
 
     tool_info["ai_response"] = final_ai_response
     tool_usage_log.append(tool_info)
-    tool_used = tool_info['tool_used']
-    if tool_info["tool_used"]:
-        print(f"\n✅ Tool used in this query: " + tool_used)
-    else:
-        print("\nℹ️ No external tool was used in this query.")
-
-    return final_ai_response, tool_used
-
-
-
+    Response = final_ai_response
+    return final_ai_response  # <-- RETURN the AI message
 
 
 

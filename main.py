@@ -93,7 +93,7 @@ class MyWindow(QtWidgets.QMainWindow):
             return
 
         # Call chatbot function to get the response
-        response_of_llm = chat_bot.run_chatbot(user_prompt)
+        response_of_llm, tool_used  = chat_bot.run_chatbot(user_prompt)
 
         # Print tool usage log (optional for debugging)
         for entry in chat_bot.tool_usage_log:
@@ -106,6 +106,7 @@ class MyWindow(QtWidgets.QMainWindow):
         # Show response in the label
         self.response_lbl.setAlignment(Qt.AlignTop | Qt.AlignLeft)
         self.response_lbl.setText(response_of_llm)
+        self.tool_used_lbl.setText(tool_used)
 
     def toggle_options_visibility(self):
         """Toggles visibility of model selection labels"""
