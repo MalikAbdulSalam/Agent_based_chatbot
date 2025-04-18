@@ -30,7 +30,7 @@ class State(TypedDict):
     messages: Annotated[list, add_messages]
 
 # ------------------ LLM Setup ------------------
-groq_api_key = "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"
+groq_api_key = "your Groq API key"
 llm = ChatGroq(groq_api_key=groq_api_key, model_name="Gemma2-9b-It")
 llm_with_tools = llm.bind_tools(tools=tools)
 
