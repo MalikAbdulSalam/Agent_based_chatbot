@@ -44,3 +44,4 @@ git clone https://github.com/MalikAbdulSalam/Agent_based_chatbot.git
 cd Agent_based_chatbot
 conda env create -f environment.yml
 python main.py
+**Note** – Add your groq API key in line 33 of "multi_agentic_chatbot.py"
