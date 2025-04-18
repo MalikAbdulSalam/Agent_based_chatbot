@@ -37,7 +37,7 @@ This project demonstrates how to build a simple yet powerful **agent-based chatb
 
 ## 🚀 Getting Started
 
-### 1. Clone the Repository
+### 1. Clone the Repository and Run
 
 ```bash
 git clone https://github.com/MalikAbdulSalam/Agent_based_chatbot.git
