@@ -42,3 +42,5 @@ This project demonstrates how to build a simple yet powerful **agent-based chatb
 ```bash
 git clone https://github.com/MalikAbdulSalam/Agent_based_chatbot.git
 cd Agent_based_chatbot
+pip install -r requirements.txt
+python main.py
